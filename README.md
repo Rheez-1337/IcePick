@@ -32,3 +32,5 @@ Why?
 I built IcePick because I wanted a faster way to switch painting colors while texture painting in Blender.
 
 If it helps your workflow too, peace.
+
+Tested with blender 5.0.1 +forward
