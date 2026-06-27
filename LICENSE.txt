@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<indexing>
+ <paragraph index="9" node_type="writer">GNU GENERAL PUBLIC LICENSE</paragraph>
+ <paragraph index="10" node_type="writer">Version 3, 29 June 2007</paragraph>
+ <paragraph index="12" node_type="writer">Copyright (C) 2026 Rheez</paragraph>
+ <paragraph index="14" node_type="writer">This program is free software: you can redistribute it and/or modify</paragraph>
+ <paragraph index="15" node_type="writer">it under the terms of the GNU General Public License as published by</paragraph>
+ <paragraph index="16" node_type="writer">the Free Software Foundation, either version 3 of the License, or</paragraph>
+ <paragraph index="17" node_type="writer">(at your option) any later version.</paragraph>
+ <paragraph index="19" node_type="writer">This program is distributed in the hope that it will be useful,</paragraph>
+ <paragraph index="20" node_type="writer">but WITHOUT ANY WARRANTY; without even the implied warranty of</paragraph>
+ <paragraph index="21" node_type="writer">MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</paragraph>
+ <paragraph index="23" node_type="writer">You should have received a copy of the GNU General Public License</paragraph>
+ <paragraph index="24" node_type="writer">along with this program. If not, see https://www.gnu.org/licenses/</paragraph>
+</indexing>
