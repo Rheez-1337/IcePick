@@ -1,5 +1,4 @@
 ﻿IcePick
-Works with blender 5.0.1
 
 Fast color palette workflow for Blender Texture Paint.
 
@@ -16,10 +15,16 @@ Features
 Installation
 
 1. Download IcePick.zip
-2. Blender → Edit → Preferences → Add-ons
+2. Blender Edit Preferences  Add-ons
 3. Install From Disk
 4. Enable IcePick
 5. Save Preferences
+
+
+
+
+
+
 
 Hotkeys
 
