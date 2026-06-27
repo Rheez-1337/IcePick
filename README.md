@@ -1,4 +1,5 @@
 ﻿IcePick
+Works with blender 5.0.1
 
 Fast color palette workflow for Blender Texture Paint.
 
