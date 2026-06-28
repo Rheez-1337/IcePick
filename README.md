@@ -24,10 +24,13 @@ Installation
 
 Hotkeys
 
- B  Open IcePick 
- Shift+1–8  Select Color Slot 
- Alt+W  Next Palette 
- Alt+Shift+W  Previous Palette 
+ [B]  Open IcePick 
+ 
+ [Shift]+1–8  Select Color Slot 
+ 
+ [Alt]+[W]  Next Palette 
+ 
+ [Alt]+[Shift]+[W]  Previous Palette 
 
 Why?
 
