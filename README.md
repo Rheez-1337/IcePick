@@ -4,11 +4,14 @@ Fast color palette workflow for Blender Texture Paint.
 
 Features
 
-
 [B]Open - IcePick
+
 [Shift] + 1-8 - Select color slot
+
 [Alt] + [W] - Next palette
+
 [Alt] + [Shift] + [W] - Previous palette
+
 [E] + [Mouse Drag] - Scrub through palette slots
 
 Installation
