@@ -1,7 +1,7 @@
 bl_info = {
     "name": "IcePick",
     "author": "Rheez",
-    "version": (0, 2, 1),
+    "version": (0, 4, 0),
     "blender": (5, 0, 0),
     "location": "View3D",
     "description": "Fast Texture Paint Palette System",
@@ -9,6 +9,7 @@ bl_info = {
 }
 
 import bpy
+import colorsys
 
 from bpy.types import (
     Operator,
@@ -132,6 +133,30 @@ def ensure(scene):
 # ------------------------------------------------------------
 # OPERATORS
 # ------------------------------------------------------------
+class IP_OT_capture_color(Operator):
+    bl_idname = "icepick.capture_color"
+    bl_label = "Capture Current Paint Color"
+
+    def execute(self, context):
+
+        scn = context.scene
+
+        ensure(scn)
+
+        pal = scn.icepick_palettes[
+            scn.icepick_active_palette
+        ]
+
+        pal.colors[
+            scn.icepick_active_slot
+        ].color = get_paint_color(context)
+
+        self.report(
+            {'INFO'},
+            "Captured Paint Color"
+        )
+
+        return {'FINISHED'}
 
 class IP_OT_select_slot(Operator):
     bl_idname = "icepick.select_slot"
@@ -157,6 +182,75 @@ class IP_OT_select_slot(Operator):
         )
 
         return {'FINISHED'}
+    class IP_OT_add_palette(Operator):
+        bl_idname = "icepick.add_palette"
+        bl_label = "Add Palette"
+
+    def execute(self, context):
+
+        scn = context.scene
+
+        defaults = [
+            (1, 0, 0),
+            (0, 1, 0),
+            (0, 0, 1),
+            (1, 1, 0),
+            (1, 0, 1),
+            (0, 1, 1),
+            (0.5, 0.5, 0.5),
+            (1, 1, 1),
+        ]
+
+        pal = scn.icepick_palettes.add()
+
+        pal.name = f"Palette {len(scn.icepick_palettes)}"
+
+        for color in defaults:
+            slot = pal.colors.add()
+            slot.color = color
+
+        scn.icepick_active_palette = (
+            len(scn.icepick_palettes) - 1
+        )
+
+        self.report(
+            {'INFO'},
+            f"Created {pal.name}"
+        )
+
+        return {'FINISHED'}
+
+
+class IP_OT_delete_palette(Operator):
+    bl_idname = "icepick.delete_palette"
+    bl_label = "Delete Palette"
+
+    def execute(self, context):
+
+        scn = context.scene
+
+        if len(scn.icepick_palettes) <= 1:
+
+            self.report(
+                {'WARNING'},
+                "Cannot delete last palette"
+            )
+
+            return {'CANCELLED'}
+
+        idx = scn.icepick_active_palette
+
+        scn.icepick_palettes.remove(idx)
+
+        scn.icepick_active_palette = max(
+            0,
+            min(
+                idx,
+                len(scn.icepick_palettes) - 1
+            )
+        )
+
+        return {'FINISHED'}
 
 
 class IP_OT_next_palette(Operator):
@@ -175,9 +269,88 @@ class IP_OT_next_palette(Operator):
             scn.icepick_palettes
         ):
             scn.icepick_active_palette = 0
+            
+        pal = scn.icepick_palettes[
+            scn.icepick_active_palette
+            
+         ]
+         
+        self.report(
+            {'INFO'},
+            f"[{scn.icepick_active_palette + 1}/{len(scn.icepick_palettes)}] {pal.name}"
+            )
 
         return {'FINISHED'}
 
+class IP_OT_add_palette(Operator):
+    bl_idname = "icepick.add_palette"
+    bl_label = "Add Palette"
+
+    def execute(self, context):
+
+        scn = context.scene
+
+        defaults = [
+            (1, 0, 0),
+            (0, 1, 0),
+            (0, 0, 1),
+            (1, 1, 0),
+            (1, 0, 1),
+            (0, 1, 1),
+            (0.5, 0.5, 0.5),
+            (1, 1, 1),
+        ]
+
+        pal = scn.icepick_palettes.add()
+
+        pal.name = f"Palette {len(scn.icepick_palettes)}"
+
+        for color in defaults:
+            slot = pal.colors.add()
+            slot.color = color
+
+        scn.icepick_active_palette = (
+            len(scn.icepick_palettes) - 1
+        )
+
+        self.report(
+            {'INFO'},
+            f"Created {pal.name}"
+        )
+
+        return {'FINISHED'}
+
+
+class IP_OT_delete_palette(Operator):
+    bl_idname = "icepick.delete_palette"
+    bl_label = "Delete Palette"
+
+    def execute(self, context):
+
+        scn = context.scene
+
+        if len(scn.icepick_palettes) <= 1:
+
+            self.report(
+                {'WARNING'},
+                "Cannot delete last palette"
+            )
+
+            return {'CANCELLED'}
+
+        idx = scn.icepick_active_palette
+
+        scn.icepick_palettes.remove(idx)
+
+        scn.icepick_active_palette = max(
+            0,
+            min(
+                idx,
+                len(scn.icepick_palettes) - 1
+            )
+        )
+
+        return {'FINISHED'}
 
 class IP_OT_prev_palette(Operator):
     bl_idname = "icepick.prev_palette"
@@ -195,13 +368,23 @@ class IP_OT_prev_palette(Operator):
             scn.icepick_active_palette = (
                 len(scn.icepick_palettes) - 1
             )
+            
+        pal = scn.icepick_palettes[
+            scn.icepick_active_palette
+            ]
+            
+        self.report(
+            {'INFO'},
+            f"[{scn.icepick_active_palette + 1}/{len(scn.icepick_palettes)}] {pal.name}"
+            )
 
         return {'FINISHED'}
 
+class IP_OT_sort_palette(Operator):
+    bl_idname = "icepick.sort_palette"
+    bl_label = "Sort Palette"
 
-class IP_OT_capture_color(Operator):
-    bl_idname = "icepick.capture_color"
-    bl_label = "Capture Current Paint Color"
+    mode: StringProperty()
 
     def execute(self, context):
 
@@ -213,16 +396,116 @@ class IP_OT_capture_color(Operator):
             scn.icepick_active_palette
         ]
 
-        pal.colors[
-            scn.icepick_active_slot
-        ].color = get_paint_color(context)
+        colors = [
+            tuple(slot.color)
+            for slot in pal.colors
+        ]
+
+        if self.mode == "HUE":
+
+            colors.sort(
+                key=lambda c:
+                colorsys.rgb_to_hsv(*c)[0]
+            )
+
+        elif self.mode == "SAT":
+
+            colors.sort(
+                key=lambda c:
+                colorsys.rgb_to_hsv(*c)[1]
+            )
+
+        elif self.mode == "VAL":
+
+            colors.sort(
+                key=lambda c:
+                colorsys.rgb_to_hsv(*c)[2]
+            )
+
+        elif self.mode == "LUM":
+
+            colors.sort(
+                key=lambda c:
+                (
+                    0.2126 * c[0] +
+                    0.7152 * c[1] +
+                    0.0722 * c[2]
+                )
+            )
+
+        for i, color in enumerate(colors):
+            pal.colors[i].color = color
 
         self.report(
             {'INFO'},
-            "Captured Paint Color"
+            f"Sorted by {self.mode}"
         )
 
         return {'FINISHED'}
+    
+class IP_OT_drag_slot(Operator):
+    bl_idname = "icepick.drag_slot"
+    bl_label = "Drag Slot Selector"
+
+    start_x = 0
+    start_slot = 0
+    current_slot = 0
+
+    def invoke(self, context, event):
+
+        scn = context.scene
+
+        ensure(scn)
+
+        self.start_x = event.mouse_x
+        self.start_slot = scn.icepick_active_slot
+        self.current_slot = self.start_slot
+
+        context.window_manager.modal_handler_add(self)
+
+        return {'RUNNING_MODAL'}
+
+    def modal(self, context, event):
+
+        if event.type == 'MOUSEMOVE':
+
+            delta = event.mouse_x - self.start_x
+
+            slot = self.start_slot + int(delta / 50)
+
+            slot = max(0, min(7, slot))
+
+            if slot != self.current_slot:
+
+                self.current_slot = slot
+
+                scn = context.scene
+
+                scn.icepick_active_slot = slot
+
+                pal = scn.icepick_palettes[
+                    scn.icepick_active_palette
+                ]
+
+                set_paint_color(
+                    context,
+                    pal.colors[slot].color
+                )
+
+                self.report(
+                    {'INFO'},
+                    f"Slot {slot + 1}"
+                )
+
+        elif event.type == 'E' and event.value == 'RELEASE':
+
+            return {'FINISHED'}
+
+        elif event.type in {'ESC', 'RIGHTMOUSE'}:
+
+            return {'CANCELLED'}
+
+        return {'RUNNING_MODAL'}
 
 
 class IP_OT_popup(Operator):
@@ -275,7 +558,48 @@ class IP_OT_popup(Operator):
             "icepick.next_palette",
             text=">"
         )
+    
+        row = layout.row(align=True)
+        
+        row.operator(
+        "icepick.add_palette",
+        text="+ New"
+        
+        )
+        
+        row.operator(
+        "icepick.delete_palette",
+        text="Delete"
+        
+        )
+        layout.label(text="Sort Slots")
 
+        row = layout.row(align=True)
+
+        op = row.operator(
+            "icepick.sort_palette",
+            text="Hue"
+        )
+        op.mode = "HUE"
+
+        op = row.operator(
+            "icepick.sort_palette",
+            text="Sat"
+        )
+        op.mode = "SAT"
+
+        op = row.operator(
+            "icepick.sort_palette",
+            text="Val"
+        )
+        op.mode = "VAL"
+
+        op = row.operator(
+            "icepick.sort_palette",
+            text="Lum"
+        )
+        op.mode = "LUM"
+            
         layout.operator(
             "icepick.capture_color",
             text="Capture Current Paint Color"
@@ -355,6 +679,11 @@ def register_keymaps():
         name="3D View",
         space_type='VIEW_3D'
     )
+    km.keymap_items.new(
+    "icepick.drag_slot",
+    type='E',
+    value='PRESS'
+)
 
     keys = [
         "ONE",
@@ -426,7 +755,13 @@ classes = (
     IP_OT_select_slot,
     IP_OT_next_palette,
     IP_OT_prev_palette,
+
+    IP_OT_add_palette,
+    IP_OT_delete_palette,
+    IP_OT_sort_palette,
+
     IP_OT_capture_color,
+    IP_OT_drag_slot,
     IP_OT_popup,
 )
 
